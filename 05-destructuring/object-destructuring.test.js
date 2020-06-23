@@ -43,3 +43,30 @@ test('accepts default value', () => {
 
   expect(y).toBe(0);
 });
+
+test('different variable names', () => {
+  let obj = {
+    x: 15,
+    y: -3,
+  };
+
+  let { x: a, y: b } = obj;
+
+  expect(a).toBe(15);
+  expect(b).toBe(-3);
+});
+
+test('nested object destructuring', () => {
+  let obj = {
+    x: 15,
+    y: {
+      a: 5,
+      b: 3,
+    },
+  };
+
+  let { y: { a, b } } = obj;
+
+  expect(a).toBe(5);
+  expect(b).toBe(3);
+});
