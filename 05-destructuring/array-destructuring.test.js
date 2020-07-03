@@ -33,3 +33,39 @@ test('swapping variables', () => {
   expect(x).toBe(1);
   expect(y).toBe(0);
 });
+
+test('with default values', () => {
+  let arr = [1];
+
+  let [x = 3, y = 5] = arr;
+
+  expect(x).toBe(1);
+  expect(y).toBe(5);
+});
+
+test('nested array destructuring', () => {
+  let arr = ['a', [1, 2, 3], 'b'];
+
+  let [x, [y]] = arr;
+
+  expect(x).toBe('a');
+  expect(y).toBe(1);
+});
+
+test('can store rest items', () => {
+  let arr = [1, 2, 3];
+
+  let [x, ...rest] = arr;
+
+  expect(x).toBe(1);
+  expect(rest).toEqual([2, 3]);
+});
+
+test('can clone arrays', () => {
+  let arr = [5, 'a', 6.7];
+
+  let [...cloned] = arr;
+
+  expect(cloned).not.toBe(arr);
+  expect(cloned).toEqual(arr);
+});
