@@ -27,3 +27,22 @@ test('complex object and array destructuring', () => {
     url: 'small.jpg',
   });
 });
+
+test('destructured parameters for function options', () => {
+  function doSomething(id, task, {
+    // optional arguments start here
+    terminal = 1,
+    country = 'de',
+    date = new Date()
+  } = {}) {
+    expect(id).toBe(0);
+    expect(task).toBe('new');
+    expect(terminal).toBe(1);
+    expect(country).toBe('zh');
+    expect(date).not.toBeUndefined();
+  }
+
+  doSomething(0, 'new', {
+    country: 'zh',
+  });
+});
