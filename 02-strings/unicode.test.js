@@ -23,6 +23,7 @@ test('normalize()', () => {
 test('u flag for regular expressions', () => {
   let text = '𠰴';
 
-  expect(/^.$/.test(text)).toBe(false);
-  expect(/^.$/u.test(text)).toBe(true);
+  let regexp = /^.$/;
+  expect(regexp.test(text)).toBe(false);
+  expect(new RegExp(regexp, 'u').test(text)).toBe(true);
 });
