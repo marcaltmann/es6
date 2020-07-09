@@ -55,3 +55,10 @@ test('default parameter expression using previous value', () => {
   expect(sum(3, 7)).toBe(10);
   expect(sum(3)).toBe(6);
 });
+
+test('also work with the Function constructor', () => {
+  let sum = new Function('a', 'b = a', 'return a + b');
+
+  expect(sum(1, 2)).toBe(3);
+  expect(sum(2)).toBe(4);
+});

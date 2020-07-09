@@ -14,3 +14,9 @@ test('rest parameter', () => {
   expect(add(4,5)).toBe(9);
   expect(add(1, 2, 3, 4, 5)).toBe(15);
 });
+
+test('also work with the Function constructor', () => {
+  let pickFirst = new Function('...args', 'return args[0];');
+
+  expect(pickFirst(3, 2, 1)).toBe(3);
+});
