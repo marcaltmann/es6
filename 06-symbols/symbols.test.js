@@ -33,3 +33,31 @@ test('getOwnPropertySymbols()', () => {
   expect(properties.length).toBe(1);
   expect(properties[0]).toBe(uid);
 });
+
+test('usage with Object.defineProperty()', () => {
+  let uid = Symbol('uid');
+  let article = {
+    [uid]: 1,
+  };
+
+  Object.defineProperty(article, uid, { writable: false });
+  article[uid] = 2;
+
+  expect(article[uid]).toBe(1);
+});
+
+test('usage with Object.defineProperties()', () => {
+  let uid = Symbol('uid');
+  let article = {};
+
+  Object.defineProperties(article, {
+    [uid]: {
+      value: 1,
+      writable: false,
+    },
+  });
+
+  article[uid] = 2;
+
+  expect(article[uid]).toBe(1);
+});
