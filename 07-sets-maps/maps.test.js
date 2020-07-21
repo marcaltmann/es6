@@ -45,7 +45,7 @@ test('special key types for maps', () => {
 });
 
 test('special key types for objects', () => {
-  let map = new Object(null);
+  let map = Object.create(null);
   let obj1 = {};
   let obj2 = {};
   map['5'] = 'value1';
