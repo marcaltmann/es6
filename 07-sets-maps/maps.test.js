@@ -72,3 +72,25 @@ test('forEach() method', () => {
     expect(m).toBe(map);
   });
 });
+
+test('weak map basics', () => {
+  let map = new WeakMap();
+  let person = {
+    name: 'Eduardo',
+    age: 56,
+  };
+
+  map.set(person, {
+    isUser: true,
+    isAdmin: false,
+  });
+
+  expect(map.has(person)).toBeTruthy();
+  expect(map.get(person)).toEqual({
+    isUser: true,
+    isAdmin: false,
+  });
+  expect(() => {
+    map.set(5, 'some information');
+  }).toThrow(TypeError);
+});
