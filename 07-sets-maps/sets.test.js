@@ -1,17 +1,19 @@
 test('basic usage', () => {
-  let numbers = new Set([5, 3, 6, 9, 4, 5, 5, 1]);
+  let set = new Set();
 
-  numbers.delete(9);
-  numbers.add(-1);
-  numbers.add(5);
+  set.add(1)
+     .add(2)
+     .add(3)
+     .add(3)
+     .add(3)
+     .delete(2);
 
-  expect(numbers.size).toBe(6);
-  expect(numbers.has(1)).toBeTruthy();
-  expect([...numbers]).toEqual([5, 3, 6, 4, 1, -1]);
+  expect(set.size).toBe(2);
+  expect(set.has(1)).toBeTruthy();
+  expect(set.has(2)).toBeFalsy();
 
-  numbers.clear();
-
-  expect(numbers.size).toBe(0);
+  set.clear();
+  expect(set.size).toBe(0);
 });
 
 test('forEach() method', () => {
@@ -25,12 +27,19 @@ test('forEach() method', () => {
   });
 });
 
-test('weak set basics', () => {
-  let set = new WeakSet();
+test('converting from and to arrays', () => {
+  let set = new Set([5, 3, 6, 9, 4, 5, 5, 1]);
+  let arr = [...set];
 
-  expect(() => {
-    set.add(5);
-  }).toThrow(TypeError);
+  expect(arr).toEqual([5, 3, 6, 9, 4, 1]);
+});
 
-  expect(set.size).toBeUndefined();
-})
+test('add method only accepts one argument', () => {
+  let set = new Set();
+
+  set.add(1);
+  set.add(2, 3, 4);
+  set.add([5, 6, 7]);
+
+  expect([...set]).toEqual([1, 2, [5, 6, 7]]);
+});
