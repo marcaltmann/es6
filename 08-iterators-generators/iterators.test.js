@@ -65,9 +65,36 @@ test('custom iterator', () => {
   };
 
   let thornhill = new Person('Roger', 'O.', 'Thornhill');
-  let names = [];
-  for (name of thornhill) {
-    names.push(name);
+  let name = [...thornhill].join(' ');
+
+  expect(name).toBe('Roger O. Thornhill');
+});
+
+test('iterating maps', () => {
+  let person = new Map();
+  person.set('Given name', 'Roger');
+  person.set('Surname', 'Thornhill');
+
+  let attributes = new Array();
+  for ([attr, value] of person) {  // The default iterator for maps is entries()
+    attributes.push(`${attr}: ${value}`);
   }
-  expect(names.join(' ')).toBe('Roger O. Thornhill');
+
+  expect(attributes).toEqual([
+    'Given name: Roger',
+    'Surname: Thornhill',
+  ]);
+});
+
+test('iterating strings', () => {
+  let name = 'Roger O. Thornhill';
+  let num = 0;
+
+  for (char of name) {
+    if (char.toLowerCase() === 'o') {
+      num += 1;
+    }
+  }
+
+  expect(num).toBe(3);
 });
