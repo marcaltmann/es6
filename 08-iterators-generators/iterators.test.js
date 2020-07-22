@@ -46,3 +46,28 @@ test('entries iterator', () => {
   expect(iterator.next().value).toEqual([1, 'b']);
   expect(iterator.next().value).toEqual([2, 'c']);
 });
+
+test('custom iterator', () => {
+  let Person = function(givenName, middleName, surname) {
+    this.givenName = givenName;
+    this.middleName = middleName;
+    this.surname = surname;
+  }
+  Person.prototype = {
+    getName() {
+      return `${this.givenName} ${this.middleName} ${this.surname}`;
+    },
+    *[Symbol.iterator]() {
+      yield this.givenName;
+      yield this.middleName;
+      yield this.surname;
+    },
+  };
+
+  let thornhill = new Person('Roger', 'O.', 'Thornhill');
+  let names = [];
+  for (name of thornhill) {
+    names.push(name);
+  }
+  expect(names.join(' ')).toBe('Roger O. Thornhill');
+});
