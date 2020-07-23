@@ -1,6 +1,6 @@
-test('simple task runner or something', () => {
+test('simple task runner', () => {
   expect.assertions(3);
-  
+
   function run(taskDef) {
     let task = taskDef();
 
@@ -15,7 +15,7 @@ test('simple task runner or something', () => {
 
     function step() {
       if (!result.done) {
-        result = task.next();
+        result = task.next(result.value);
 
         expect(typeof result).toBe('object');
 
@@ -25,7 +25,7 @@ test('simple task runner or something', () => {
   }
 
   run(function *() {
-    yield 1;
-    yield 2;
+    let a = yield 1;
+    yield a + 2;
   });
 });
