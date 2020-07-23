@@ -66,5 +66,71 @@ test('throw() function with catch clause within generator', () => {
   expect(numbers.throw(new Error('Boom')).value).toBe(-1);
   expect(numbers.next().value).toBe(-2);
   expect(numbers.next().value).toBe(-3);
-  expect(numbers.next().value).toBe(undefined);
+  expect(numbers.next().value).toBeUndefined();
+});
+
+test('combining generators through delegation', () => {
+  function *createNumberIterator() {
+    yield 1;
+    yield 2;
+  }
+  function *createCharacterIterator() {
+    yield 'a';
+    yield 'b';
+  }
+  function *createCombinedIterator() {
+    yield *createNumberIterator();
+    yield *createCharacterIterator();
+    yield 'The End';
+  }
+  let iterator = createCombinedIterator();
+
+  expect(iterator.next().value).toBe(1);
+  expect(iterator.next().value).toBe(2);
+  expect(iterator.next().value).toBe('a');
+  expect(iterator.next().value).toBe('b');
+  expect(iterator.next().value).toBe('The End');
+});
+
+test('using delegation with return', () => {
+  function *createNumberIterator() {
+    yield 1;
+    yield 2;
+    return 3;
+  }
+  function *createCountIterator(n) {
+    for (let i = 1; i <= n; i++) {
+      yield i;
+    }
+  }
+  function *createCombinedIterator() {
+    let a = yield *createNumberIterator();
+    yield a;
+    yield *createCountIterator(a);
+  }
+  let iterator = createCombinedIterator();
+
+  expect(iterator.next().value).toBe(1);
+  expect(iterator.next().value).toBe(2);
+  expect(iterator.next().value).toBe(3);
+  expect(iterator.next().value).toBe(1);
+  expect(iterator.next().value).toBe(2);
+  expect(iterator.next().value).toBe(3);
+  expect(iterator.next().value).toBeUndefined();
+});
+
+test('using delegation with a string', () => {
+  function *createIterator() {
+    yield 'Hello';
+    yield *'Roger';
+  }
+  let iterator = createIterator();
+
+  expect(iterator.next().value).toBe('Hello');
+  expect(iterator.next().value).toBe('R');
+  expect(iterator.next().value).toBe('o');
+  expect(iterator.next().value).toBe('g');
+  expect(iterator.next().value).toBe('e');
+  expect(iterator.next().value).toBe('r');
+  expect(iterator.next().value).toBeUndefined();
 });
