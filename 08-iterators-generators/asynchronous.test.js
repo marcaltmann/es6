@@ -29,3 +29,46 @@ test('simple task runner', () => {
   expect(savedResults[1].value).toBe(3);
   expect(savedResults[2].value).toBeUndefined();
 });
+
+test('asynchronous task runner', done => {
+  function fetchData(delay) {
+    return function(callback) {
+      setTimeout(function() {
+        callback(null, 'Hi!');
+      }, delay);
+    };
+  }
+
+  function run(taskDef) {
+    let task = taskDef();
+
+    let result = task.next();
+
+    step();
+
+    function step() {
+      if (!result.done) {
+        if (typeof result.value === 'function') {
+          result.value(function(err, data) {
+            if (err) {
+              result = task.throw(err);
+              return;
+            }
+
+            result = task.next(data);
+            step();
+          })
+        } else {
+          result = task.next(result.value);
+          step();
+        }
+      }
+    }
+  }
+
+  run(function *() {
+    let result = yield fetchData(50);
+    expect(result).toBe('Hi!');
+    done();
+  });
+});
