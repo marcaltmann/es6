@@ -87,11 +87,11 @@ test('iterating maps', () => {
 });
 
 test('iterating strings', () => {
-  let name = 'Roger O. Thornhill';
+  let name = 'R𠰴ger 𠰴. Th𠰴rnhill';
   let num = 0;
 
   for (char of name) {
-    if (char.toLowerCase() === 'o') {
+    if (char === '𠰴') {
       num += 1;
     }
   }
