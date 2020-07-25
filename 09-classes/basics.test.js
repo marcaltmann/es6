@@ -49,3 +49,60 @@ test('singleton objects', () => {
 
   expect(planet.getName()).toBe('Earth');
 });
+
+test('accessor properties, computed names and generators', () => {
+  // All these can be used with plain objects as well.
+  class Person {
+    get name() {
+      return this._name;
+    }
+
+    set name(value) {
+      this._name = value;
+    }
+
+    *[Symbol.iterator]() {
+      yield this._name;
+    }
+  }
+
+  let p = new Person();
+  p.name = 'Roger O. Thornhill';
+
+  expect(p.name).toBe('Roger O. Thornhill');
+  let descriptor = Object.getOwnPropertyDescriptor(Person.prototype, 'name');
+  expect(descriptor.value).toBeUndefined();
+  expect(typeof descriptor.get).toBe('function');
+  expect(typeof descriptor.set).toBe('function');
+
+  let elements = [...p];
+  expect(elements.length).toBe(1);
+  expect(elements[0]).toBe('Roger O. Thornhill');
+});
+
+test('static members', () => {
+  /* Would normally be set like:
+     Person.getAllNames = function() {...} */
+  class Person {
+    get name() {
+      return this._name;
+    }
+
+    set name(value) {
+      this._name = value;
+    }
+
+    static getAllNames() {
+      return ['Roger Thornhill', 'Eve Kendall', 'Lester Townsend'];
+    }
+
+    static get extras() {
+      return ['Auctioneer', 'Leonard'];
+    }
+  }
+
+  expect(Person.getAllNames()).toEqual(
+    ['Roger Thornhill', 'Eve Kendall', 'Lester Townsend']
+  );
+  expect(Person.extras).toEqual(['Auctioneer', 'Leonard']);
+});
