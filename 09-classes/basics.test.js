@@ -35,3 +35,17 @@ test('class expressions', () => {
   expect(p1.getName()).toBe('Roger O. Thornton');
   expect(Person.name).toBe('Person');  // Different from the book.
 });
+
+test('singleton objects', () => {
+  let planet = new class {
+    constructor(name) {
+      this.name = name
+    }
+
+    getName() {
+      return this.name;
+    }
+  }('Earth');
+
+  expect(planet.getName()).toBe('Earth');
+});
