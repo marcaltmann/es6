@@ -51,3 +51,49 @@ test('using extends for inheritance', () => {
   expect(Square.PI).toBe(3.14);
   expect(Square.getPi()).toBe(3.14);
 });
+
+test('inheriting from built-in types', () => {
+  class NewArray extends Array {
+  }
+
+  let arr = new NewArray();
+  arr.push(5);
+  arr.push(6);
+  arr.push(7);
+
+  let arr2 = arr.concat(8);
+
+  expect(arr).toEqual([5, 6, 7]);
+  expect(arr2).toEqual([5, 6, 7, 8]);
+  expect(arr).toBeInstanceOf(NewArray);
+  expect(arr2).toBeInstanceOf(NewArray);
+});
+
+test('simulating abstract classes', () => {
+  class Being {
+    constructor() {
+      if (new.target === Being) {
+        throw new Error('Being cannot be instantiated.');
+      }
+    }
+  }
+
+  class Person extends Being {
+    constructor(size) {
+      super();
+      this.size = size;
+    }
+
+    getSize() {
+      return this.size;
+    }
+  }
+
+  let p = new Person(1.73);
+  expect(p.getSize()).toBe(1.73);
+  expect(p).toBeInstanceOf(Being);
+
+  expect(() => {
+    let b = new Being();
+  }).toThrow('Being cannot be instantiated.');
+});
