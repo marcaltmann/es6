@@ -20,3 +20,55 @@ test('failing promise', (done) => {
     }
   );
 });
+
+test('code execution order 1', (done) => {
+  let order = new Array();
+
+  order.push(1);
+
+  let promise = new Promise((resolve, reject) => {
+    order.push(2);
+    resolve();
+  });
+
+  promise.then(
+    (result) => {
+      order.push(3);
+
+      expect(order.length).toBe(4);
+      expect(order).toEqual([1, 2, 4, 3]);
+      done();
+    }
+  );
+
+  order.push(4);
+});
+
+test('code execution order 2', (done) => {
+  // Job queue is not executed until "program" ends.
+
+  let result = (function () {
+    let order = new Array();
+
+    order.push(1);
+
+    let promise = new Promise((resolve, reject) => {
+      order.push(2);
+      resolve();
+    });
+
+    promise.then(
+      (result) => {
+        order.push(3);
+      }
+    );
+
+    order.push(4);
+
+    return order;
+  })();
+
+  expect(result.length).toBe(3);
+  expect(result).toEqual([1, 2, 4]);
+  done();
+});
