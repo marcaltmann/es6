@@ -1,4 +1,4 @@
-test('basic promise test', (done) => {
+test('resolving promise', (done) => {
   let promise = Promise.resolve(42);
 
   promise.then(
@@ -9,11 +9,22 @@ test('basic promise test', (done) => {
   );
 });
 
-test('failing promise', (done) => {
+test('rejecting promise with then', (done) => {
   let promise = Promise.reject('Error');
 
   promise.then(
     null,
+    (error) => {
+      expect(error).toBe('Error');
+      done();
+    }
+  );
+});
+
+test('rejecting promise with catch', (done) => {
+  let promise = Promise.reject('Error');
+
+  promise.catch(
     (error) => {
       expect(error).toBe('Error');
       done();
@@ -73,27 +84,13 @@ test('code execution order 2', (done) => {
   done();
 });
 
-test('error handling with then', (done) => {
+test('errors get caught internally', (done) => {
   let promise = new Promise((resolve, reject) => {
     throw new Error('Promise failed.');
   });
 
   promise.then(
     null,
-    (error) => {
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe('Promise failed.');
-      done();
-    }
-  );
-});
-
-test('error handling with catch', (done) => {
-  let promise = new Promise((resolve, reject) => {
-    throw new Error('Promise failed.');
-  });
-
-  promise.catch(
     (error) => {
       expect(error).toBeInstanceOf(Error);
       expect(error.message).toBe('Promise failed.');
