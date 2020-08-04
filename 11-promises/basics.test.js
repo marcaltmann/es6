@@ -73,24 +73,6 @@ test('code execution order 2', (done) => {
   done();
 });
 
-test('legacy compatibility', (done) => {
-  let thenable = {
-    then(resolve, reject) {
-      reject(42);
-    },
-  };
-
-  let promise = Promise.resolve(thenable);
-
-  promise.then(
-    null,
-    (error) => {
-      expect(error).toBe(42);
-      done();
-    }
-  );
-});
-
 test('error handling with then', (done) => {
   let promise = new Promise((resolve, reject) => {
     throw new Error('Promise failed.');
