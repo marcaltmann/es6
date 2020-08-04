@@ -72,3 +72,50 @@ test('code execution order 2', (done) => {
   expect(result).toEqual([1, 2, 4]);
   done();
 });
+
+test('legacy compatibility', (done) => {
+  let thenable = {
+    then(resolve, reject) {
+      reject(42);
+    },
+  };
+
+  let promise = Promise.resolve(thenable);
+
+  promise.then(
+    null,
+    (error) => {
+      expect(error).toBe(42);
+      done();
+    }
+  );
+});
+
+test('error handling with then', (done) => {
+  let promise = new Promise((resolve, reject) => {
+    throw new Error('Promise failed.');
+  });
+
+  promise.then(
+    null,
+    (error) => {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe('Promise failed.');
+      done();
+    }
+  );
+});
+
+test('error handling with catch', (done) => {
+  let promise = new Promise((resolve, reject) => {
+    throw new Error('Promise failed.');
+  });
+
+  promise.catch(
+    (error) => {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe('Promise failed.');
+      done();
+    }
+  );
+});
