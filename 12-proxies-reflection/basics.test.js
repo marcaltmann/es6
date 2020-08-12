@@ -11,7 +11,7 @@ test('a simple pass-through proxy', () => {
   expect(target.name).toBe('target');
 });
 
-test('array with checks for value type', () => {
+test('manipulating object set', () => {
   let target = {
     name: 'target',
   };
@@ -46,3 +46,30 @@ test('array with checks for value type', () => {
     proxy.anotherName = 'proxy';
   }).toThrow('Property must be a number.');
 });
+
+test('manipulating object get', () => {
+  expect.assertions(4);
+
+  let target = {};
+
+  let proxy = new Proxy(target, {
+    get(trapTarget, key, receiver) {
+      if (key in receiver) {
+        let value = Reflect.get(trapTarget, key, receiver);
+        expect(value).toBe('target');
+        return value;
+        return Reflect.get(trapTarget, key, receiver);
+      } else {
+        throw new Error(`Property ${key} does not exist on the object.`);
+      }
+    },
+  });
+
+  target.name = 'target';
+
+  expect(target.name).toBe('target');
+  expect(proxy.name).toBe('target');
+  expect(() => {
+    proxy.nme;
+  }).toThrow('Property nme does not exist on the object');
+})
